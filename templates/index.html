@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
+
+</head>
+<body>
+
+    <div class="box">
+        <div class="box-content">
+            <p class="box-text">Calculator App</p>
+        </div>
+    </div>
+
+    <form class="form-container" action="{{ url_for('calculate') }}" method="post">
+        <div class="form-row">
+            <div class="form-column">
+                <input type="number" name="firstNumber" class="input-field" placeholder="First Number" required>
+            </div>
+
+            <div class="form-column">
+                <select id="selectOperation" class="input-field" name="operation" required>
+                    <option value="">Select</option>
+                    <option value="plus">+</option>
+                    <option value="minus">-</option>
+                    <option value="multiply">×</option>
+                    <option value="divide">÷</option>
+                </select>
+            </div>
+
+            <div class="form-column">
+                <input type="number" name="secondNumber" class="input-field" placeholder="Second Number" required>
+            </div>
+
+            <div class="form-column">
+                <input type="submit" value="Calculate" class="submit-button"/>
+            </div>
+        </div>
+
+        <div class="form-row margin-top">
+            <div class="form-column">
+                <div class="text-center">=</div>
+            </div>
+            <div class="form-column">
+                <input type="text" class="input-field" placeholder="Result"> 
+            </div>
+        </div>
+    </form>
+</body>
+</html>
