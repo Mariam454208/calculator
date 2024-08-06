@@ -1,59 +1,32 @@
 document.addEventListener('DOMContentLoaded', function() {
     const display = document.getElementById('display');
     const buttons = document.querySelectorAll('.button');
-    let currentInput = '';
-    let equation = '';
 
     buttons.forEach(button => {
         button.addEventListener('click', function() {
             const value = this.getAttribute('data-value');
 
-            if (value >= '0' && value <= '9') {
-                currentInput += value;
-                display.value = equation + currentInput;
-            } else if (value == 'plus' || value == 'minus' || value == 'multiply' || value == 'divide') {
-                if (currentInput !== '') {
-                    equation += currentInput;
-                    currentInput = '';
+            if (value === 'CE') {
+                display.value = '0';
+            } else if (value === '=') {
+                display.value = calculateResult(display.value);
+            } else {
+                if (display.value === '0' && !['+', '-', '*', '/'].includes(value)) {
+                    display.value = value;
+                } else {
+                    display.value += value;
                 }
-                let operator;
-                switch (value) {
-                    case 'plus':
-                        operator = '+';
-                        break;
-                    case 'minus':
-                        operator = '-';
-                        break;
-                    case 'multiply':
-                        operator = '*';
-                        break;
-                    case 'divide':
-                        operator = '/';
-                        break;
-                }
-                equation += ' ' + operator + ' ';
-                display.value = equation;
-            } else if (value == 'equals') {
-                if (currentInput !== '') {
-                    equation += currentInput;
-                    currentInput = '';
-                }
-                try {
-                    let result = eval(equation.replace(/\s+/g, ''));
-                    if (String(result).includes('Infinity') || String(result).includes('NaN')) {
-                        result = 'Error';
-                    }
-                    display.value = result;
-                    equation = result; 
-                } catch (e) {
-                    display.value = 'Error';
-                    equation = '';
-                }
-            } else if (value == 'clear') {
-                currentInput = '';
-                equation = '';
-                display.value = '';
             }
         });
     });
+
+    function calculateResult(equation) {
+        try {
+            const result = eval(equation);
+            if (isNaN(result) || !isFinite(result)) return 'Error';
+            return result.toString();
+        } catch {
+            return 'Error';
+        }
+    }
 });
