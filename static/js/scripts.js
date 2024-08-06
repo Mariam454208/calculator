@@ -1,40 +1,59 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('.form-container');
-    const firstNumberInput = document.querySelector('input[name="firstNumber"]');
-    const secondNumberInput = document.querySelector('input[name="secondNumber"]');
-    const operationSelect = document.querySelector('select[name="operation"]');
-    const resultField = document.querySelector('.margin-top input');
+    const display = document.getElementById('display');
+    const buttons = document.querySelectorAll('.button');
+    let currentInput = '';
+    let equation = '';
 
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
 
-        const firstNumber = parseFloat(firstNumberInput.value);
-        const secondNumber = parseFloat(secondNumberInput.value);
-        const operation = operationSelect.value;
-        let result;
-
-        switch (operation) {
-            case 'plus':
-                result = firstNumber + secondNumber;
-                break;
-            case 'minus':
-                result = firstNumber - secondNumber;
-                break;
-            case 'multiply':
-                result = firstNumber * secondNumber;
-                break;
-            case 'divide':
-                if (secondNumber === 0) {
-                    result = "Cannot divide by zero.";
-                } else {
-                    result = firstNumber / secondNumber;
+            if (value >= '0' && value <= '9') {
+                currentInput += value;
+                display.value = equation + currentInput;
+            } else if (value == 'plus' || value == 'minus' || value == 'multiply' || value == 'divide') {
+                if (currentInput !== '') {
+                    equation += currentInput;
+                    currentInput = '';
                 }
-                break;
-            default:
-                result = "Please select a valid operation.";
-                break;
-        }
-
-        resultField.value = result;
+                let operator;
+                switch (value) {
+                    case 'plus':
+                        operator = '+';
+                        break;
+                    case 'minus':
+                        operator = '-';
+                        break;
+                    case 'multiply':
+                        operator = '*';
+                        break;
+                    case 'divide':
+                        operator = '/';
+                        break;
+                }
+                equation += ' ' + operator + ' ';
+                display.value = equation;
+            } else if (value == 'equals') {
+                if (currentInput !== '') {
+                    equation += currentInput;
+                    currentInput = '';
+                }
+                try {
+                    let result = eval(equation.replace(/\s+/g, ''));
+                    if (String(result).includes('Infinity') || String(result).includes('NaN')) {
+                        result = 'Error';
+                    }
+                    display.value = result;
+                    equation = result; 
+                } catch (e) {
+                    display.value = 'Error';
+                    equation = '';
+                }
+            } else if (value == 'clear') {
+                currentInput = '';
+                equation = '';
+                display.value = '';
+            }
+        });
     });
 });
